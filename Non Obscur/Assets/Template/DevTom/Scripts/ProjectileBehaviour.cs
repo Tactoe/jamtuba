@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,13 +34,10 @@ public class ProjectileBehaviour : MonoBehaviour
         direction = dir;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        TargetBehaviour target = collision.gameObject.GetComponent<TargetBehaviour>();
-        if (target != null)
-        {
-            target.GetDamage(1f);
+        if (!other.CompareTag("Zombie") && !other.CompareTag("Waypoint"))
             Destroy(gameObject);
-        }
     }
+
 }

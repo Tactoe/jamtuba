@@ -36,9 +36,11 @@ public class EnemyBehaviour : MonoBehaviour
     private float speed;
 
     private float fireCooldDown = 0;
+    private Animator m_Animator;
 
     private void Awake()
     {
+        m_Animator = GetComponent<Animator>();
         targetBehaviour = target.GetComponent<TargetBehaviour>();
         material = gameObject.GetComponent<Material>();
     }
@@ -46,6 +48,7 @@ public class EnemyBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        target = FindObjectOfType<GroundedCharacterController>().gameObject;
         initPos = toVector2(transform.position);
         lastPos = initPos;
         lastPatrolPos = initPos;
@@ -100,7 +103,7 @@ public class EnemyBehaviour : MonoBehaviour
     void FollowAndDamageTarget()
     {
         Debug.Log("following");
-        Shoot();
+        m_Animator.SetTrigger("Attack");
         if(selfToTarget.magnitude <= collision_damaging_radius)
         {
             targetBehaviour.GetDamage(1f);
@@ -206,5 +209,10 @@ public class EnemyBehaviour : MonoBehaviour
     {
         return direction;
         //return (toVector2(transform.position) - lastPos);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        GameManager.DrawCircle(transform.position, targeting_radius);
     }
 }
