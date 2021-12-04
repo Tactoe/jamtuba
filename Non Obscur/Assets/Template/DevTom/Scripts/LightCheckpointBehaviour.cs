@@ -57,4 +57,9 @@ public class LightCheckpointBehaviour : MonoBehaviour
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        GameManager.DrawCircle(transform.position, distanceCompletionThreshold);
+    }
 }

@@ -207,4 +207,9 @@ public class EnemyBehaviour : MonoBehaviour
         return direction;
         //return (toVector2(transform.position) - lastPos);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        GameManager.DrawCircle(transform.position, targeting_radius);
+    }
 }
