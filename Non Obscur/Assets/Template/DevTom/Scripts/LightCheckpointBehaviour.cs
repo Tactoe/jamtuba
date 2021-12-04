@@ -7,6 +7,7 @@ public class LightCheckpointBehaviour : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] float distanceCompletionThreshold = 2f;
     [SerializeField] GameObject[] enemies;
+    [SerializeField] GameObject sheet;
 
     private Light pointLight;
 
@@ -46,6 +47,10 @@ public class LightCheckpointBehaviour : MonoBehaviour
     void EnableCheckpoint()
     {
         pointLight.enabled = true;
+        if(sheet != null)
+        {
+            sheet.GetComponent<sheetBehaviour>().launch();
+        }
         foreach(GameObject enemy in enemies)
         {
             EnemyBehaviour enemyBehaviour = enemy.GetComponent<EnemyBehaviour>();
