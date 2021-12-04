@@ -13,8 +13,9 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] float following_speed = 4;
     [SerializeField] float targeting_radius;
     [SerializeField] float fov_vision = 0.3f;
+    [SerializeField] float firerate = 1;
 
-    [SerializeField] float damaging_radius;
+    [SerializeField] float collision_damaging_radius;
 
     [SerializeField] float stunDuration;
 
@@ -33,6 +34,8 @@ public class EnemyBehaviour : MonoBehaviour
     private Vector2 lastPos;
     private Vector2 direction;
     private float speed;
+
+    private float fireCooldDown = 0;
 
     private void Awake()
     {
@@ -97,8 +100,8 @@ public class EnemyBehaviour : MonoBehaviour
     void FollowAndDamageTarget()
     {
         Debug.Log("following");
-        //Shoot();
-        if(selfToTarget.magnitude <= damaging_radius)
+        Shoot();
+        if(selfToTarget.magnitude <= collision_damaging_radius)
         {
             targetBehaviour.GetDamage(1f);
         }
@@ -125,10 +128,19 @@ public class EnemyBehaviour : MonoBehaviour
 
     void Shoot()
     {
-        // spawn rate !
-        GameObject p = Instantiate(projectile, transform, true);
-        ProjectileBehaviour pBehaviour = p.GetComponent<ProjectileBehaviour>();
-        pBehaviour.SetDirection(new Vector2(1, 1));
+        if(fireCooldDown <= 0)
+        {
+            Vector2 projectionDirection = direction + Vector2.up * 0.8f;
+            projectionDirection.Normalize();
+            GameObject p = Instantiate(projectile, transform.position + toVector3(projectionDirection), transform.rotation);
+            ProjectileBehaviour pBehaviour = p.GetComponent<ProjectileBehaviour>();
+            pBehaviour.SetDirection(toVector3(projectionDirection * 10));
+            fireCooldDown = (1 / firerate);
+        }
+        else
+        {
+            fireCooldDown -= Time.deltaTime;
+        }
     }
 
     void Patrol()

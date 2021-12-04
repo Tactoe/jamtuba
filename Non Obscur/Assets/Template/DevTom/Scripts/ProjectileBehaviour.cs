@@ -32,4 +32,14 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         direction = dir;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        TargetBehaviour target = collision.gameObject.GetComponent<TargetBehaviour>();
+        if (target != null)
+        {
+            target.GetDamage(1f);
+            Destroy(gameObject);
+        }
+    }
 }
