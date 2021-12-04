@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     public void pause()
     {
+        FindObjectOfType<PlayerInput>().enabled = false;
         canvas.SetActive(true);
         Time.timeScale = 0;
         isPaused = true;
@@ -102,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     public void resume()
     {
+        FindObjectOfType<PlayerInput>().enabled = true;
         Time.timeScale = 1;
         isPaused = false;
         // re-enable inputs
