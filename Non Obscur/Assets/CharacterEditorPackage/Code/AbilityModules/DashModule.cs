@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Serialization;
 
 //--------------------------------------------------------------------
@@ -11,11 +15,19 @@ public class DashModule : GroundedControllerAbilityModule
     [SerializeField] float m_DashStrength = 0.0f;
     [SerializeField] float m_DashCooldown = 0.0f;
     [SerializeField] float m_DashMaxDuration = 0.0f;
+    [SerializeField] float m_CameraShakeDuration = 0.0f;
+    [SerializeField] float m_CameraShakeStrength = 0.0f;
+    [SerializeField] float m_BloomMaxStrength = 0.0f;
+    [SerializeField] float m_BloomFadeOutTime = 0.0f;
+    [SerializeField] float m_DistortionMaxStrength = 0.0f;
 
     [SerializeField] bool m_ResetDashsAfterTouchingWall = false;
     [SerializeField] bool m_ResetDashsAfterTouchingEdge = false;
     [SerializeField] bool m_OverridePreviousSpeed = false;
 
+
+    private Volume m_DashVolume;
+    private ParticleSystem m_DashParticle;
     float m_LastDashTime;
     bool m_HasDashedAndNotTouchedGroundYet;
     float m_DashDuration;
@@ -26,8 +38,13 @@ public class DashModule : GroundedControllerAbilityModule
         base.ResetState();
         m_LastDashTime = Time.fixedTime - m_DashCooldown;
         m_DashDuration = 0;
-        print("Doing restet");
         m_HasDashedAndNotTouchedGroundYet = false;
+    }
+
+    private void Start()
+    {
+        m_DashVolume = GameObject.Find("DashVolume").GetComponent<Volume>();
+        m_DashParticle = GameObject.Find("DashParticle").GetComponent<ParticleSystem>();
     }
 
     //Called whenever this module is started (was inactive, now is active)
@@ -44,8 +61,18 @@ public class DashModule : GroundedControllerAbilityModule
         direction.x = direction.x > 0 ? 1 : -1;
         direction.y = 0;
 
+        m_DashParticle.Play();
+        Volume ok = FindObjectOfType<Volume>();
+        Bloom bloo;
+        LensDistortion distortion;
+        ok.profile.TryGet(out bloo);
+        ok.profile.TryGet(out distortion);
+        DOTween.To(x => bloo.intensity.value = x, 0f, m_BloomMaxStrength, 0.05f).OnComplete(() => DOTween.To(x => bloo.intensity.value = x, m_BloomMaxStrength, 0f, m_BloomFadeOutTime));
+        DOTween.To(x => distortion.intensity.value = x, 0f, m_DistortionMaxStrength, 0.05f).OnComplete(() => DOTween.To(x => distortion.intensity.value = x, m_DistortionMaxStrength, 0f, m_BloomFadeOutTime));
+        //DOTween.To(x => bloo.intensity.value = x, 0f, m_BloomMaxStrength, 0.05f).SetLoops(1, LoopType.Yoyo);
+        
+
         Vector2 currentVel = m_ControlledCollider.GetVelocity();
-        GameObject.Find("DashParticle").GetComponent<ParticleSystem>().Play();
         StartCoroutine(ResetDash());
         if (m_OverridePreviousSpeed)
         {
@@ -66,7 +93,7 @@ public class DashModule : GroundedControllerAbilityModule
             m_DashDuration += 0.1f;
             yield return new WaitForSeconds(0.1f);
         }
-        GameObject.Find("DashParticle").GetComponent<ParticleSystem>().Stop();
+        m_DashParticle.Stop();
 
         m_DashDuration = 0;
         print("Done dashing");
@@ -102,11 +129,6 @@ public class DashModule : GroundedControllerAbilityModule
             return false;
         }
 
-        if (m_DashDuration >= m_DashMaxDuration)
-        {
-            print("OVERDOSE");
-            return false;
-        }
         if (!DoesInputExist("Aim") || !DoesInputExist("Dash"))
         {
             Debug.LogError("Input for module " + GetName() + " not set up");
@@ -114,6 +136,7 @@ public class DashModule : GroundedControllerAbilityModule
         }
         if (GetDirInput("Aim").HasSurpassedThreshold() && GetButtonInput("Dash").m_WasJustPressed)
         {
+            //Camera.main.DOShakePosition(m_CameraShakeDuration, m_CameraShakeStrength);
             return true;
         }
         
