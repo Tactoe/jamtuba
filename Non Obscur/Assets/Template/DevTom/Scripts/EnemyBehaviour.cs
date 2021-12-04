@@ -31,6 +31,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     //movement
     private Vector2 lastPos;
+    private Vector2 direction;
+    private float speed;
 
     private void Awake()
     {
@@ -57,10 +59,13 @@ public class EnemyBehaviour : MonoBehaviour
         {
             case 0:
                 Patrol();
-                CheckDistanceWithTarget();
+                if (isTargetSeen())
+                {
+                    state = 1;
+                }
                 break;
             case 1:
-                if (DoSeeTarget())
+                if (isTargetSeen())
                 {
                     FollowAndDamageTarget();
                 }
@@ -73,43 +78,54 @@ public class EnemyBehaviour : MonoBehaviour
                 stunCooldown -= Time.deltaTime;
                 break;
         }
+        move();
         lastPos = toVector2(transform.position);
         //yield return new WaitForSeconds(0.1f);
     }
 
-    void CheckDistanceWithTarget()
+    bool isTargetSeen()
     {
-        float distance = (target.transform.position - transform.position).magnitude;
-        Debug.Log(distance);
+        float distance = selfToTarget.magnitude;
+        //Debug.Log(distance);
         if (distance <= targeting_radius)
         {
-            if (DoSeeTarget())
-            {
-                state = 1;
-            }
+            return DoSeeTarget();
         }
+        return false;
     }
 
     void FollowAndDamageTarget()
     {
         Debug.Log("following");
-        selfToTarget = target.transform.position - transform.position;
+        //Shoot();
         if(selfToTarget.magnitude <= damaging_radius)
         {
             targetBehaviour.GetDamage(1f);
         }
         else
         {
-            Vector2 movement = selfToTarget;
-            movement.y = 0;
-            movement = movement.normalized * following_speed * Time.deltaTime;
+            //Vector2 movement = selfToTarget;
+            //movement.y = 0;
+            //movement = movement.normalized * following_speed * Time.deltaTime;
+            float dX = 0;
+            if (transform.position.x > target.transform.position.x)
+            {
+                dX = -1;
+            }
+            else
+            {
+                dX = 1;
+            }
             lastPos = transform.position;
-            transform.position += toVector3(movement);
+            direction = new Vector2(dX, 0);
+            speed = following_speed;
+            //transform.position += toVector3(direction);
         }
     }
 
     void Shoot()
     {
+        // spawn rate !
         GameObject p = Instantiate(projectile, transform, true);
         ProjectileBehaviour pBehaviour = p.GetComponent<ProjectileBehaviour>();
         pBehaviour.SetDirection(new Vector2(1, 1));
@@ -117,36 +133,45 @@ public class EnemyBehaviour : MonoBehaviour
 
     void Patrol()
     {
-        if((lastPatrolPos - toVector2(transform.position)).magnitude > patrollingErrorThreshold)
+        Debug.Log("Patrol");
+        if(transform.position.x > initPos.x + patrolTourSize)
         {
-            // returning back to patrolling
-            Debug.Log("back");
-            lastPos = transform.position;
-            transform.position += toVector3((lastPatrolPos - toVector2(transform.position)).normalized * Time.deltaTime * walking_speed);
+            patrolDirection = Vector2.left;
+        }
+        if(transform.position.x < initPos.x - patrolTourSize)
+        {
+            patrolDirection = Vector2.right;
+        }
+        direction = patrolDirection;
+        speed = walking_speed;
+        //transform.position += toVector3(patrolDirection * Time.deltaTime * walking_speed);
+    }
+
+    bool DoSeeTarget()
+    {
+        if(transform.position.x > target.transform.position.x)
+        {
+            Debug.Log("left");
+            return (getFacingDir().x < 0);
         }
         else
         {
-            Debug.Log("Patrol");
-            if(Mathf.Abs(lastPatrolPos.x - initPos.x) > patrolTourSize)
-            {
-                patrolDirection = -patrolDirection;
-            }
-            // continuing patrol
-            lastPos = transform.position;
-            transform.position += toVector3(patrolDirection * Time.deltaTime * walking_speed);
-            lastPatrolPos = toVector2(transform.position);
+            Debug.Log("right");
+            return (getFacingDir().x > 0);
         }
+        //return (Vector2.Dot(getFacingDir().normalized, selfToTarget.normalized) >= 1 - fov_vision);
+    }
+
+    void move()
+    {
+        lastPos = transform.position;
+        transform.position += toVector3(direction.normalized * speed * Time.deltaTime);
     }
 
     public void StunEnemy()
     {
         state = 2;
         stunCooldown = stunDuration;
-    }
-
-    bool DoSeeTarget()
-    {
-        return (Vector2.Dot(getFacingDir().normalized, selfToTarget.normalized) >= 1 - fov_vision);
     }
 
     public void die()
@@ -167,6 +192,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     Vector2 getFacingDir()
     {
-        return (toVector2(transform.position) - lastPos);
+        return direction;
+        //return (toVector2(transform.position) - lastPos);
     }
 }
