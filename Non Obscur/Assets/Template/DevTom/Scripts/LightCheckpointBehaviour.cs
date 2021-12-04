@@ -19,6 +19,7 @@ public class LightCheckpointBehaviour : MonoBehaviour
     void Start()
     {
         pointLight.enabled = false;
+        GameManager.instance.increaseWinCondition();
         StartCoroutine("CheckForPlayer");
     }
 
@@ -45,6 +46,7 @@ public class LightCheckpointBehaviour : MonoBehaviour
 
     void EnableCheckpoint()
     {
+        GameManager.instance.increaseWinCondition();
         pointLight.enabled = true;
         foreach(GameObject enemy in enemies)
         {
@@ -54,5 +56,10 @@ public class LightCheckpointBehaviour : MonoBehaviour
                 enemyBehaviour.die();
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        GameManager.DrawCircle(transform.position, distanceCompletionThreshold);
     }
 }
