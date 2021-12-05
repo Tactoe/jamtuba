@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject startMenu;
     [SerializeField] GameObject resumeMenu;
+    [SerializeField] GameObject winScreen;
+    [SerializeField] GameObject winBlackBackground;
+    [SerializeField] GameObject winLogo;
     [SerializeField] Slider soundVolume;
+    [SerializeField] AudioSource musicPlayer;
+    [SerializeField] AudioSource winSoundPlayer;
     [SerializeField] bool showMenuOnStart;
 
     private int mainMenuIndex = 1;
@@ -17,6 +23,7 @@ public class GameManager : MonoBehaviour
     private bool isPaused = false;
     private bool escapeBufferRead = false;
     private int winCondition = 0;
+    private Image winBlackBackgroundImg;
 
     public static GameManager instance;
 
@@ -31,6 +38,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        winBlackBackgroundImg = winBlackBackground.GetComponent<Image>();
     }
 
     // Start is called before the first frame update
@@ -41,9 +50,14 @@ public class GameManager : MonoBehaviour
             startMenu.SetActive(false);
             canvas.SetActive(false);
         }
+        else
+        {
+            musicPlayer.Play();
+        }
         StartCoroutine("CheckForWin");
         resumeMenu.SetActive(false);
         setSoundVolume();
+        winScreen.SetActive(false);
     }
 
     private void Update()
@@ -70,11 +84,36 @@ public class GameManager : MonoBehaviour
         {
             if (isPlaying && winCondition == 0)
             {
-                // has won
+                win();
             }
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+    public void win()
+    {
+        isPlaying = false;
+        FindObjectOfType<PlayerInput>().enabled = false;
+        canvas.SetActive(true);
+        winScreen.SetActive(true);
+        resumeMenu.SetActive(false);
+        musicPlayer.Pause();
+        winSoundPlayer.Play();
+        winBlackBackgroundImg.DOFade(1, 9.5f).SetEase(Ease.Linear).OnComplete(DisplayWinLogo);
+    }
+
+    void DisplayWinLogo()
+    {
+        winLogo.SetActive(true);
+        winLogo.transform.DOScale(0.8f, 9f).OnComplete(() =>
+            {
+                winLogo.SetActive(false);
+                winScreen.SetActive(false);
+                mainMenu();
+            }
+        );
+    }
+
 
     public void increaseWinCondition()
     {
@@ -88,14 +127,15 @@ public class GameManager : MonoBehaviour
 
     public void play()
     {
-        if (!isPlaying)
+        isPlaying = true;
+        canvas.SetActive(false);
+        startMenu.SetActive(false);
+        resumeMenu.SetActive(true);
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Level");
+        if (!musicPlayer.isPlaying)
         {
-            isPlaying = true;
-            canvas.SetActive(false);
-            startMenu.SetActive(false);
-            resumeMenu.SetActive(true);
-            Time.timeScale = 1;
-            SceneManager.LoadScene("Level");
+            musicPlayer.Play();
         }
     }
 
