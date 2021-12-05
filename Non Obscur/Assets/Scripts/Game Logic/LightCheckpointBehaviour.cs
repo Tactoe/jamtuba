@@ -1,11 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LightCheckpointBehaviour : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-    [SerializeField] float distanceCompletionThreshold = 2f;
     [SerializeField] GameObject[] enemies;
     [SerializeField] GameObject sheet;
 
@@ -21,7 +20,6 @@ public class LightCheckpointBehaviour : MonoBehaviour
     {
         pointLight.enabled = false;
         GameManager.instance.increaseWinCondition();
-        StartCoroutine("CheckForPlayer");
     }
 
     // Update is called once per frame
@@ -32,16 +30,13 @@ public class LightCheckpointBehaviour : MonoBehaviour
 
     // check if player is near the light
     // coroutine stops itself and enable light if so
-    IEnumerator CheckForPlayer()
+
+    private void OnTriggerEnter(Collider other)
     {
-        while (true)
+        if (other.CompareTag("Player"))
         {
-            if ((player.transform.position - transform.position).magnitude <= distanceCompletionThreshold)
-            {
+            print("Got player");
                 EnableCheckpoint();
-                StopCoroutine("CheckForPlayer");
-            }
-            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -61,10 +56,5 @@ public class LightCheckpointBehaviour : MonoBehaviour
                 zombieBehavior.Die();
             }
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        GameManager.DrawCircle(transform.position, distanceCompletionThreshold);
     }
 }

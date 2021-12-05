@@ -48,8 +48,8 @@ public class OnJumpParticleSpawner : MonoBehaviour {
         }
         if (valid)
         { 
-            m_ParticleSystem.transform.position = position;
-            m_ParticleSystem.transform.LookAt(position + normal, Vector3.back);
+            //m_ParticleSystem.transform.position = position;
+            //m_ParticleSystem.transform.LookAt(position + normal, Vector3.back);
             m_ParticleSystem.Emit(m_EmissionCount);
         }
     }
