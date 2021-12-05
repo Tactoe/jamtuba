@@ -8,6 +8,7 @@ public class BasicCameraTracker : MonoBehaviour {
     [SerializeField] float m_InterpolationFactor = 0.0f;
     [SerializeField] bool m_UseFixedUpdate = false;
     [SerializeField] float m_ZDistance = 10.0f;
+    [SerializeField] float m_YDistance = 0.0f;
 
 	void FixedUpdate () 
 	{
@@ -31,7 +32,7 @@ public class BasicCameraTracker : MonoBehaviour {
         {
             return;
         }
-        Vector3 diff = m_Target.transform.position + Vector3.back * m_ZDistance - transform.position;
+        Vector3 diff = m_Target.transform.position + Vector3.up * m_YDistance +  Vector3.back * m_ZDistance - transform.position;
         transform.position += diff * m_InterpolationFactor * a_DeltaTime;
     }
 }
