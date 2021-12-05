@@ -37,7 +37,14 @@ public class ProjectileBehaviour : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Zombie") && !other.CompareTag("Waypoint"))
+        {
+            if (other.CompareTag("Player"))
+            {
+                other.GetComponent<EnergyManager>().GetHit();
+            }
+
             Destroy(gameObject);
+        }
     }
 
 }

@@ -127,12 +127,13 @@ public class ZombieBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Waypoint")
+        if (other.CompareTag("Waypoint"))
         {
             if (m_CurrentState == ZombieState.Patrol)
             {
+                print("Going back");
                 m_CurrentDirection *= -1;
-                transform.DORotate(transform.rotation.eulerAngles * Vector2.up * -1, 0.2f);
+                transform.DORotate(transform.rotation.eulerAngles * Vector2.up * -1, 0.4f);
             }
             else
             {

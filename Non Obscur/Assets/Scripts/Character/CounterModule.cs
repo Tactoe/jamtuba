@@ -102,8 +102,9 @@ public class CounterModule : GroundedControllerAbilityModule
             Debug.LogError("Input for module " + GetName() + " not set up");
             return false;
         }
-        if (GetButtonInput("Counter").m_WasJustPressed)
+        if (GetButtonInput("Counter").m_WasJustPressed && FindObjectOfType<EnergyManager>().CanCounter)
         {
+            FindObjectOfType<EnergyManager>().Reload();
             m_WaitForFirstInput = false;
             //Camera.main.DOShakePosition(m_CameraShakeDuration, m_CameraShakeStrength);
             return true;
