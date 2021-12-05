@@ -12,10 +12,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject resumeMenu;
     [SerializeField] GameObject winScreen;
     [SerializeField] GameObject winBlackBackground;
+    [SerializeField] private Image fadeout;
     [SerializeField] GameObject winLogo;
     [SerializeField] Slider soundVolume;
     [SerializeField] AudioSource musicPlayer;
     [SerializeField] AudioSource winSoundPlayer;
+    [SerializeField] AudioSource deathSoundPlayer;
     [SerializeField] bool showMenuOnStart;
 
     private int mainMenuIndex = 1;
@@ -90,6 +92,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Transition()
+    {
+        fadeout.color = new Color(0, 0, 0, 0);
+        fadeout.DOFade(1, 2.5f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            SceneManager.LoadScene("Scenes/Level_hall");
+            fadeout.DOFade(0, 0.4f);
+        });
+    }
+
     public void win()
     {
         isPlaying = false;
@@ -99,6 +111,7 @@ public class GameManager : MonoBehaviour
         resumeMenu.SetActive(false);
         musicPlayer.Pause();
         winSoundPlayer.Play();
+        winBlackBackgroundImg.color = new Color(0, 0, 0, 0);
         winBlackBackgroundImg.DOFade(1, 9.5f).SetEase(Ease.Linear).OnComplete(DisplayWinLogo);
     }
 
@@ -171,6 +184,14 @@ public class GameManager : MonoBehaviour
     public void quit()
     {
         Application.Quit();
+    }
+
+    public void DeathReload()
+    {
+        winBlackBackgroundImg.color = new Color(0, 0, 0, 0);
+        deathSoundPlayer.Play();
+        
+        winBlackBackgroundImg.DOFade(1, 4f).SetEase(Ease.Linear).OnComplete(() => SceneManager.LoadScene(SceneManager.GetActiveScene().name));
     }
 
     public void toggleFullscreen()

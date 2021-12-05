@@ -10,6 +10,8 @@ public class LightCheckpointBehaviour : MonoBehaviour
 
     private Light pointLight;
 
+    [SerializeField] private bool m_IsTransition;
+
     private void Awake()
     {
         pointLight = gameObject.GetComponent<Light>();
@@ -42,6 +44,12 @@ public class LightCheckpointBehaviour : MonoBehaviour
 
     void EnableCheckpoint()
     {
+        if (m_IsTransition)
+        {
+            GameManager.instance.Transition();
+            return;
+        }
+        
         GameManager.instance.decreaseWinCondition();
         pointLight.enabled = true;
         if(sheet != null)

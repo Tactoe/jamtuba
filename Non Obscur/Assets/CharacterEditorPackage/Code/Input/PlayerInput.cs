@@ -11,7 +11,7 @@ public class PlayerInput : MonoBehaviour
 
     //Called by Unity upon adding a new component to an object, or when Reset is selected in the context menu. Used here to provide default values.
     //Also used when fixing up components using the CharacterFixEditor button
-    void Reset()
+    public void Reset()
     {
         m_CharacterController = transform.GetComponent<CharacterControllerBase>();
         EnsureJumpAndMoveInputsAreSet();

@@ -23,7 +23,9 @@ public class EnergyManager : MonoBehaviour
         LifeLeft--;
         if (LifeLeft <= 0)
         {
+            GetComponent<PlayerInput>().Reset();
             GetComponent<PlayerInput>().enabled = false;
+            GameManager.instance.DeathReload();
             //Destroy(gameObject);
         }
     }
