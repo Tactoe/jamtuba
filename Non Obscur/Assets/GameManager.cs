@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject startMenu;
     [SerializeField] GameObject resumeMenu;
     [SerializeField] Slider soundVolume;
+    [SerializeField] bool showMenuOnStart;
 
+    private int mainMenuIndex = 1;
     private bool isPlaying = false;
     private bool isPaused = false;
     private bool escapeBufferRead = false;
@@ -34,6 +36,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!showMenuOnStart)
+        {
+            startMenu.SetActive(false);
+            canvas.SetActive(false);
+        }
         StartCoroutine("CheckForWin");
         resumeMenu.SetActive(false);
         setSoundVolume();
@@ -118,7 +125,7 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         isPlaying = false;
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(mainMenuIndex);
     }
 
     public void quit()
