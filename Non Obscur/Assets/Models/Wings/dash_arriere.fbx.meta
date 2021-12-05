@@ -1,11 +1,14 @@
 fileFormatVersion: 2
-guid: 8cde991ec7d4ff844837ed1843fcd6f3
+guid: 4a97e6edb70d25f419b196a28dcfbc2a
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
-      74: -3524072142031781770
-    second: ailes|dash_avant
+      74: 4781951162920444690
+    second: Armature|ArmatureAction
+  - first:
+      74: -5283036305432841446
+    second: Armature|dash_avant.001
   externalObjects: {}
   materials:
     materialImportMode: 2

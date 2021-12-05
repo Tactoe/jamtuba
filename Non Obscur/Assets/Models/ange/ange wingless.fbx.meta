@@ -1,20 +1,11 @@
 fileFormatVersion: 2
-guid: 4a53e92485591da4a922e24a7513a721
+guid: 70be585cd1da5384ba80ee22aa81f58c
 ModelImporter:
   serializedVersion: 21202
-  internalIDToNameTable:
-  - first:
-      74: 6430996326323399120
-    second: Armature|dash_arriere
-  - first:
-      74: 8435612403814988242
-    second: Armature|dash_avant
-  - first:
-      74: -4720165634649188471
-    second: Armature|doublejump
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 2
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -65,7 +56,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
-    optimizeBones: 1
+    optimizeBones: 0
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -84,7 +75,15 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips: []
+  referencedClips:
+  - cfabff793d8d9c146ae1cf96a094d39b
+  - 1981129874a61e34696327942d142eec
+  - 38876bcd0ad852d4aa1a34da7788cc2c
+  - bcc081d2dedcc8c44b671e18d3524f8b
+  - 83b2b2abfbfa5d2458b4629b31b4ad30
+  - bc2201592b9a51b4aae24b564f42a8c3
+  - 4ff97de04398fa64985c6d86d5b4f97b
+  - f3b74ee8d0b47f54cafb43741e189eb6
   importAnimation: 1
   humanDescription:
     serializedVersion: 3

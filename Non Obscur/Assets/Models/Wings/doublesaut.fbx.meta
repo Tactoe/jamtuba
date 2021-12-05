@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: aff5ec931ec2ad341bb2c8b52752fbdf
+guid: 179dc9839fc3f0843b7a53581d14f870
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
-      74: 6430996326323399120
-    second: Armature|dash_arriere
+      74: 4781951162920444690
+    second: Armature|ArmatureAction
   - first:
-      74: 8435612403814988242
-    second: Armature|dash_avant
+      74: -5283036305432841446
+    second: Armature|dash_avant.001
   - first:
-      74: -4720165634649188471
-    second: Armature|doublejump
+      74: -2613998814351176284
+    second: Armature|Shader NodetreeAction.001
   externalObjects: {}
   materials:
     materialImportMode: 2
