@@ -57,4 +57,9 @@ public class LightCheckpointBehaviour : MonoBehaviour
             }
         }
     }
+
+    public bool isCompleted()
+    {
+        return pointLight.enabled;
+    }
 }
