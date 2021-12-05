@@ -110,6 +110,7 @@ public class ZombieBehavior : MonoBehaviour
     
     public void Shoot()
     {
+        GetComponent<AudioSource>().Play();
         GameObject projectile = Instantiate(m_Projectile, transform.position, Quaternion.identity);
         //projectile.GetComponent<Rigidbody>().DOJump(m_Target.position, 2, 1, m_ProjectileSpeed);
         float heightOffset = Random.Range(-2, 2);

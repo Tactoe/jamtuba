@@ -30,6 +30,7 @@ public class GroundedCharacterController : CharacterControllerBase
     [SerializeField] float m_JumpAlignedToGroundFactor = 0.0f;
     [SerializeField] float m_HorizontalJumpBoostFactor = 0.0f;
     [SerializeField] bool m_ResetVerticalSpeedOnJumpIfMovingDown = false;
+    [SerializeField] private AudioClip[] m_JumpClips;
     float m_LastJumpPressedTime;
     bool m_JumpInputIsCached;
     bool m_JumpCutPossible;
@@ -201,6 +202,8 @@ public class GroundedCharacterController : CharacterControllerBase
             m_JumpInputIsCached = false;
         }
         m_LastJumpTime = Time.fixedTime;
+        int index = Random.Range(0, m_JumpClips.Length);
+        GetComponent<AudioSource>().PlayOneShot(m_JumpClips[index]);
         LaunchCharacter(a_Velocity, a_OverridePreviousVelocity);
         if (OnJump != null)
         {
