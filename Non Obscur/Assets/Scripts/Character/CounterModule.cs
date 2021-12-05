@@ -63,6 +63,19 @@ public class CounterModule : GroundedControllerAbilityModule
                 m_PerfectCounterMaxRange)
             {
                 print("did PERFECT COUNTER");
+                Collider[] colliders = Physics.OverlapSphere(m_ControlledCollider.GetUpCenter(), 20);
+                foreach(Collider collider in colliders)
+                {
+                    //print("collider");
+                    if (collider.CompareTag("Zombie"))
+                    {
+                        ZombieBehavior zombieBehavior = collider.GetComponent<ZombieBehavior>();
+                        if(zombieBehavior != null)
+                        {
+                            zombieBehavior.stun();
+                        }
+                    }
+                }
                 Destroy(projectile);
                 
             }

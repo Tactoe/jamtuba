@@ -15,12 +15,13 @@ public class ZombieBehavior : MonoBehaviour
     [SerializeField] private GameObject m_Projectile;
     [SerializeField] private float m_ProjectileSpeed;
     [SerializeField] private float m_ProjectileJumpForce;
+    [SerializeField] private float m_stunDuration;
     
     private Rigidbody m_RB;
     private Animator m_Animator;
 
     private Transform m_Target;
-    private enum ZombieState {Patrol, Chasing, Attacking};
+    private enum ZombieState {Patrol, Chasing, Attacking, Stunned};
 
     [SerializeField] private ZombieState m_CurrentState;
     
@@ -71,6 +72,9 @@ public class ZombieBehavior : MonoBehaviour
             case ZombieState.Chasing:
                 StartCoroutine(ChaseHero());
                 break;
+            case ZombieState.Stunned:
+                StartCoroutine(Stunned());
+                break;
         }
     }
 
@@ -93,7 +97,7 @@ public class ZombieBehavior : MonoBehaviour
         bool heroGotAway = false;
         while (!heroGotAway)
         {
-            if (Vector3.Distance(transform.position, m_Target.transform.position) < m_AttackRadius)
+            if (Vector3.Distance(transform.position, m_Target.transform.position) < m_AttackRadius && m_CurrentState != ZombieState.Stunned)
             {
                 m_Animator.SetTrigger("Attack");
                 UpdateState(ZombieState.Attacking);
@@ -106,6 +110,14 @@ public class ZombieBehavior : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    IEnumerator Stunned()
+    {
+        Debug.Log("stunned");
+        
+        yield return new WaitForSeconds(m_stunDuration);
+        UpdateState(ZombieState.Patrol);
     }
     
     public void Shoot()
@@ -124,6 +136,12 @@ public class ZombieBehavior : MonoBehaviour
     {
         StopAllCoroutines();
         Destroy(gameObject);
+    }
+
+    public void stun()
+    {
+        StopAllCoroutines();
+        UpdateState(ZombieState.Stunned);
     }
 
     private void OnTriggerEnter(Collider other)
