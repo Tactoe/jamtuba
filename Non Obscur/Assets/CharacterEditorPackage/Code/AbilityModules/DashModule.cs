@@ -6,6 +6,7 @@ using DG.Tweening;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 //--------------------------------------------------------------------
 //Dash module is a movement ability
@@ -24,7 +25,6 @@ public class DashModule : GroundedControllerAbilityModule
     [SerializeField] bool m_ResetDashsAfterTouchingWall = false;
     [SerializeField] bool m_ResetDashsAfterTouchingEdge = false;
     [SerializeField] bool m_OverridePreviousSpeed = false;
-
 
     private Volume m_DashVolume;
     private ParticleSystem m_DashParticle;
@@ -62,6 +62,8 @@ public class DashModule : GroundedControllerAbilityModule
         direction.y = 0;
 
         m_DashParticle.Play();
+        FindObjectOfType<Footsteps>().Dash();
+        
         Volume ok = FindObjectOfType<Volume>();
         Bloom bloo;
         LensDistortion distortion;
