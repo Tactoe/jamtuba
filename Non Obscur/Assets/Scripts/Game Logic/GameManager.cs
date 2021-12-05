@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
             startMenu.SetActive(false);
             resumeMenu.SetActive(true);
             Time.timeScale = 1;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene("Level");
         }
     }
 
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         isPlaying = false;
         Time.timeScale = 1;
-        SceneManager.LoadScene(mainMenuIndex);
+        SceneManager.LoadScene("HomeMenu");
     }
 
     public void quit()

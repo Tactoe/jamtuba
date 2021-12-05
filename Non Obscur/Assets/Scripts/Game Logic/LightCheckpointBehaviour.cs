@@ -46,14 +46,14 @@ public class LightCheckpointBehaviour : MonoBehaviour
 
     void EnableCheckpoint()
     {
-        GameManager.instance.increaseWinCondition();
+        GameManager.instance.decreaseWinCondition();
         pointLight.enabled = true;
         foreach(GameObject enemy in enemies)
         {
-            EnemyBehaviour enemyBehaviour = enemy.GetComponent<EnemyBehaviour>();
-            if(enemyBehaviour != null)
+            ZombieBehavior zombieBehavior = enemy.GetComponent<ZombieBehavior>();
+            if(zombieBehavior != null)
             {
-                enemyBehaviour.die();
+                zombieBehavior.Die();
             }
         }
     }

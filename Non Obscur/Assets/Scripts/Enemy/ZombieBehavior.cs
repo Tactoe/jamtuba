@@ -119,6 +119,12 @@ public class ZombieBehavior : MonoBehaviour
     }
     // Update is called once per frame
 
+    public void Die()
+    {
+        StopAllCoroutines();
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Waypoint")
